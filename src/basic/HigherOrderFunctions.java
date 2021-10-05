@@ -1,5 +1,7 @@
 package basic;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class HigherOrderFunctions {
@@ -15,8 +17,10 @@ public class HigherOrderFunctions {
     }
 
     public void printFirstTenOddNumber() {
-        IntStream.range(0, 10)
+        List<Integer> numbers = IntStream.range(0, 10)
+                .boxed()
                 .filter(basic::isOdd1)
-                .forEach(System.out::println);
+                .collect(Collectors.toList());
+        System.out.println("numbers = " + numbers);
     }
 }
