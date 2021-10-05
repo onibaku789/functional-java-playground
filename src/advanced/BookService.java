@@ -12,10 +12,12 @@ public interface BookService {
 
     List<Book> getAllBookSortedByPriceDescending();
 
-    List<Book> getDiscountedBookPrices(final Function<BigDecimal, BigDecimal> discountCalculator);
+    List<Book> getDiscountedBookPrices();
 
-    List<String> getAllBooksWithStartingLetter(final Predicate<String> startWithLetter);
+    Long getCountOfBooksWithFirstLetter(final Predicate<String> startWithLetter);
 
     List<Book> getAllBooks();
+
+    String getLongestSubtitle();
 
 }
