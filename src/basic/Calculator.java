@@ -3,10 +3,10 @@ package basic;
 import java.util.function.BiFunction;
 
 public class Calculator {
-    BiFunction<Double, Double, Double> add = Double::sum;
-    BiFunction<Double, Double, Double> sub = (aDouble, aDouble2) -> aDouble - aDouble2;
-    BiFunction<Double, Double, Double> mult = (aDouble, aDouble2) -> aDouble * aDouble2;
-    BiFunction<Double, Double, Double> div = (aDouble, aDouble2) -> aDouble / aDouble2;
+    private final BiFunction<Double, Double, Double> add = Double::sum;
+    private final BiFunction<Double, Double, Double> sub = (aDouble, aDouble2) -> aDouble - aDouble2;
+    private final BiFunction<Double, Double, Double> mult = (aDouble, aDouble2) -> aDouble * aDouble2;
+    private final BiFunction<Double, Double, Double> div = (aDouble, aDouble2) -> aDouble / aDouble2;
 
     public double add(double a, double b) {
         return calculate(a, b, add);
