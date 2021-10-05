@@ -39,6 +39,14 @@ public final class Book {
         return price;
     }
 
+    public boolean isAuthor(Author author) {
+        return getAuthor().equals(author);
+    }
+
+    public Book bookWithPrice(BigDecimal newPrice) {
+        return new Book(this.isbn, this.title, this.subTitle, this.author, newPrice);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,5 +62,16 @@ public final class Book {
     @Override
     public int hashCode() {
         return Objects.hash(isbn, title, subTitle, author, price);
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+               "isbn='" + isbn + '\'' +
+               ", title='" + title + '\'' +
+               ", subTitle='" + subTitle + '\'' +
+               ", author=" + author +
+               ", price=" + price +
+               '}';
     }
 }

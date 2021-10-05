@@ -11,6 +11,10 @@ public final class Author {
         this.secondName = secondName;
     }
 
+    public boolean isAuthorOf(Book book) {
+        return book.getAuthor().equals(this);
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -30,5 +34,13 @@ public final class Author {
     @Override
     public int hashCode() {
         return Objects.hash(firstName, secondName);
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+               "firstName='" + firstName + '\'' +
+               ", secondName='" + secondName + '\'' +
+               '}';
     }
 }
