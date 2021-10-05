@@ -1,8 +1,6 @@
 package advanced;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public interface BookService {

@@ -42,16 +42,8 @@ public final class Book {
         return price;
     }
 
-    public boolean isAuthor(Author author) {
-        return getAuthor().equals(author);
-    }
-
     public Type getType() {
         return type;
-    }
-
-    public boolean hasSubTitle() {
-        return getSubTitle().isPresent();
     }
 
     public Book bookWithPrice(BigDecimal newPrice) {

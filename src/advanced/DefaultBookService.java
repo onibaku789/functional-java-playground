@@ -27,34 +27,9 @@ public class DefaultBookService implements BookService {
         defaultBookService.test();
     }
 
-    public void test() {
-        DefaultBookService defaultBookService = new DefaultBookService(new DataProvider());
-        List<Book> allBooksForAuthor = defaultBookService.getAllBooksForAuthor(new Author("Philip", "Dickens"));
-        System.out.println("allBooksForAuthor = " + allBooksForAuthor.stream().map(Book::getTitle).collect(Collectors.toList()));
-        printNL();
-        List<Book> allBooksSortedByTitleAscending = defaultBookService.getAllBooksSortedByTitleAscending();
-        System.out.println("allBooksSortedByTitleAscending = " + allBooksSortedByTitleAscending.stream().map(Book::getTitle).collect(Collectors.toList()));
-        printNL();
-        List<Book> allBookSortedByPriceDescending = defaultBookService.getAllBookSortedByPriceDescending();
-        System.out.println("allBookSortedByPriceDescending = " + allBookSortedByPriceDescending.stream().map(Book::getTitle).collect(Collectors.toList()));
-        printNL();
-        List<Book> allBooks = defaultBookService.getAllBooks();
-        String booksWithDefaultPrices = allBooks.stream()
-                .map(book -> book.getTitle() + ": " + book.getPrice())
-                .collect(Collectors.joining(", ", "Books with default prices: ", ""));
-        System.out.println(booksWithDefaultPrices);
-        printNL();
-        List<Book> discountedBookPrices = defaultBookService.getDiscountedBookPrices();
-        String booksWithDiscountPrices = discountedBookPrices.stream()
-                .map(book -> book.getTitle() + ": " + book.getPrice())
-                .collect(Collectors.joining(", ", "Books with discount prices: ", ""));
-        System.out.println(booksWithDiscountPrices);
-        printNL();
-        Long bookBeginWithFCount = defaultBookService.getCountOfBooksWithFirstLetter(startsWithLetter.apply("F"));
-        System.out.println("bookBeginWithFCount = " + bookBeginWithFCount);
-        printNL();
-        String longestSubtitle = defaultBookService.getLongestSubtitle();
-        System.out.println("longestSubtitle = " + longestSubtitle);
+    @Override
+    public List<Book> getAllBooks() {
+        return dataProvider.getAllBooks();
     }
 
     @Override
@@ -103,9 +78,41 @@ public class DefaultBookService implements BookService {
                 .orElseThrow();
     }
 
-    @Override
-    public List<Book> getAllBooks() {
-        return dataProvider.getAllBooks();
+    public void test() {
+        List<Book> allBooksForAuthor = getAllBooksForAuthor(new Author("Philip", "Dickens"));
+        System.out.println("allBooksForAuthor = " + getTitleOfBooks(allBooksForAuthor));
+        printNL();
+        List<Book> allBooksSortedByTitleAscending = getAllBooksSortedByTitleAscending();
+        System.out.println("allBooksSortedByTitleAscending = " + getTitleOfBooks(allBooksSortedByTitleAscending));
+        printNL();
+        List<Book> allBookSortedByPriceDescending = getAllBookSortedByPriceDescending();
+        System.out.println("allBookSortedByPriceDescending = " + getTitleOfBooks(allBookSortedByPriceDescending));
+        printNL();
+        List<Book> allBooks = getAllBooks();
+        String booksWithDefaultPrices = getFormattedMessage(allBooks, "Books with default prices: ");
+        System.out.println(booksWithDefaultPrices);
+        printNL();
+        List<Book> discountedBookPrices = getDiscountedBookPrices();
+        String booksWithDiscountPrices = getFormattedMessage(discountedBookPrices, "Books with discount prices: ");
+        System.out.println(booksWithDiscountPrices);
+        printNL();
+        Long bookBeginWithFCount = getCountOfBooksWithFirstLetter(startsWithLetter.apply("F"));
+        System.out.println("bookBeginWithFCount = " + bookBeginWithFCount);
+        printNL();
+        String longestSubtitle = getLongestSubtitle();
+        System.out.println("longestSubtitle = " + longestSubtitle);
+    }
+
+    private List<String> getTitleOfBooks(List<Book> allBookSortedByPriceDescending) {
+        return allBookSortedByPriceDescending.stream()
+                .map(Book::getTitle)
+                .collect(Collectors.toList());
+    }
+
+    private String getFormattedMessage(List<Book> books, String title) {
+        return books.stream()
+                .map(book -> book.getTitle() + ": " + book.getPrice())
+                .collect(Collectors.joining(", ", title, ""));
     }
 
     private void printNL() {
