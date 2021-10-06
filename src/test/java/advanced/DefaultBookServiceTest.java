@@ -134,7 +134,7 @@ class DefaultBookServiceTest {
     }
 
     @Test
-    void getDiscountedBookPrices() {
+    void getDiscountedBook() {
         //GIVEN
         List<Book> expected = List.of(new Book("isbn1", "Functional programming in Java", null,
                         new Author("Venkat", "Subramaniam"), BigDecimal.valueOf(1500.0), NEW_RELEASE),
@@ -150,7 +150,7 @@ class DefaultBookServiceTest {
                         new Author("Adrienne", "Tacke"), BigDecimal.valueOf(2499.0), KID)
         );
         //WHEN
-        List<Book> actual = underTest.getDiscountedBookPrices();
+        List<Book> actual = underTest.getDiscountedBooks();
         //THEN
         assertEquals(expected, actual);
     }

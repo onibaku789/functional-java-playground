@@ -59,7 +59,7 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
-    public List<Book> getDiscountedBookPrices() {
+    public List<Book> getDiscountedBooks() {
         return null;
     }
 

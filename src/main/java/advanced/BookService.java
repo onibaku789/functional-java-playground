@@ -10,7 +10,7 @@ public interface BookService {
 
     List<Book> getAllBookSortedByPriceDescending();
 
-    List<Book> getDiscountedBookPrices();
+    List<Book> getDiscountedBooks();
 
     Long getCountOfBooksWithFirstLetter(String letter);
 
