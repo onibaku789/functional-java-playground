@@ -4,6 +4,7 @@ package advanced;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -28,38 +29,54 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
-    public List<Book> getAllBooksForAuthor(Author author) {
-        return null;
+    public List<Book> getAllBooks() {
+        return dataProvider.getAllBooks();
+    }
+
+    @Override
+    public List<Book> getAllBooksForAuthor(final Author author) {
+        return dataProvider.getAllBooks().stream()
+                .filter(author::isAuthorOf)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Book> getAllBooksSortedByTitleAscending() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .sorted(bookTitleAscending)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Book> getAllBookSortedByPriceDescending() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .sorted(bookTitleDescending)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Book> getDiscountedBookPrices() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .map(book -> book.bookWithPrice(calculateDiscount(book)))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Long getCountOfBooksWithFirstLetter(Predicate<String> startWithLetter) {
-        return null;
-    }
-
-    @Override
-    public List<Book> getAllBooks() {
-        return null;
+    public Long getCountOfBooksWithFirstLetter(final Predicate<String> startWithLetter) {
+        return dataProvider.getAllBooks().stream()
+                .map(Book::getTitle)
+                .filter(startWithLetter)
+                .count();
     }
 
     @Override
     public String getLongestSubtitle() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .map(Book::getSubTitle)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .max(Comparator.comparingInt(String::length))
+                .orElseThrow();
     }
 
     public void test() {
@@ -129,4 +146,5 @@ public class DefaultBookService implements BookService {
     private BigDecimal getKidsBookDiscountedPrice(BigDecimal price) {
         return price.multiply(BigDecimal.valueOf(0.5)).subtract(BigDecimal.ONE);
     }
+
 }
