@@ -19,6 +19,24 @@ public class DefaultBookService implements BookService {
         this.dataProvider = dataProvider;
     }
 
+    public static BigDecimal getOldBookDiscountedPrice(BigDecimal price) {
+        if (price.compareTo(BigDecimal.valueOf(1000)) > 0) {
+            return price.multiply(BigDecimal.valueOf(.85)).setScale(1, RoundingMode.HALF_EVEN);
+        }
+        return price.multiply(BigDecimal.valueOf(.75)).setScale(1, RoundingMode.HALF_EVEN);
+    }
+
+    public static BigDecimal getNewlyReleasedBookDiscountedPrice(BigDecimal price) {
+        if (price.compareTo(BigDecimal.valueOf(2000)) > 0) {
+            return price.multiply(BigDecimal.valueOf(.60)).add(BigDecimal.valueOf(500)).setScale(1, RoundingMode.HALF_EVEN);
+        }
+        return price.multiply(BigDecimal.valueOf(.75)).setScale(1, RoundingMode.HALF_EVEN);
+    }
+
+    public static BigDecimal getKidsBookDiscountedPrice(BigDecimal price) {
+        return price.multiply(BigDecimal.valueOf(0.5)).subtract(BigDecimal.ONE).setScale(1, RoundingMode.HALF_EVEN);
+    }
+
     @Override
     public List<Book> getAllBooksForAuthor(Author author) {
         return null;
@@ -57,27 +75,9 @@ public class DefaultBookService implements BookService {
     private BigDecimal calculateDiscount(Book book) {
         BigDecimal price = book.getPrice();
         return switch (book.getType()) {
-            case OLD -> OLD.calculatePrice(this::getOldBookDiscountedPrice, price);
-            case NEW_RELEASE -> NEW_RELEASE.calculatePrice(this::getNewlyReleasedBookDiscountedPrice, price);
-            case KID -> KID.calculatePrice(this::getKidsBookDiscountedPrice, price);
+            case OLD -> OLD.calculatePrice(price);
+            case NEW_RELEASE -> NEW_RELEASE.calculatePrice(price);
+            case KID -> KID.calculatePrice(price);
         };
-    }
-
-    private BigDecimal getOldBookDiscountedPrice(BigDecimal price) {
-        if (price.compareTo(BigDecimal.valueOf(1000)) > 0) {
-            return price.multiply(BigDecimal.valueOf(.85)).setScale(1, RoundingMode.HALF_EVEN);
-        }
-        return price.multiply(BigDecimal.valueOf(.75)).setScale(1, RoundingMode.HALF_EVEN);
-    }
-
-    private BigDecimal getNewlyReleasedBookDiscountedPrice(BigDecimal price) {
-        if (price.compareTo(BigDecimal.valueOf(2000)) > 0) {
-            return price.multiply(BigDecimal.valueOf(.60)).add(BigDecimal.valueOf(500)).setScale(1, RoundingMode.HALF_EVEN);
-        }
-        return price.multiply(BigDecimal.valueOf(.75)).setScale(1, RoundingMode.HALF_EVEN);
-    }
-
-    private BigDecimal getKidsBookDiscountedPrice(BigDecimal price) {
-        return price.multiply(BigDecimal.valueOf(0.5)).subtract(BigDecimal.ONE).setScale(1, RoundingMode.HALF_EVEN);
     }
 }

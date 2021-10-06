@@ -4,11 +4,16 @@ import java.math.BigDecimal;
 import java.util.function.Function;
 
 public enum Type {
-    KID,
-    NEW_RELEASE,
-    OLD;
+    KID(DefaultBookService::getKidsBookDiscountedPrice),
+    NEW_RELEASE(DefaultBookService::getNewlyReleasedBookDiscountedPrice),
+    OLD(DefaultBookService::getOldBookDiscountedPrice);
+    private final Function<BigDecimal, BigDecimal> priceCalculator;
 
-    public BigDecimal calculatePrice(Function<BigDecimal, BigDecimal> priceCalculator, BigDecimal price) {
+    Type(Function<BigDecimal, BigDecimal> priceCalculator) {
+        this.priceCalculator = priceCalculator;
+    }
+
+    public BigDecimal calculatePrice(BigDecimal price) {
         return priceCalculator.apply(price);
     }
 }
