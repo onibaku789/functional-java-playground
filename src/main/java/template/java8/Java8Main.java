@@ -5,17 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/*
-Supplier       ()    -> x
-Consumer       x     -> ()
-Callable       ()    -> x throws ex
-Runnable       ()    -> ()
-Function       x     -> y
-BiFunction     x,y   -> z
-Predicate      x     -> boolean
-UnaryOperator  x1    -> x2
-BinaryOperator x1,x2 -> x3
- */
+
 public class Java8Main {
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
