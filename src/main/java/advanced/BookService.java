@@ -12,7 +12,7 @@ public interface BookService {
 
     List<Book> getDiscountedBookPrices();
 
-    Long getCountOfBooksWithFirstLetter(final Predicate<String> startWithLetter);
+    Long getCountOfBooksWithFirstLetter(String letter);
 
     List<Book> getAllBooks();
 

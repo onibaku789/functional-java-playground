@@ -2,11 +2,10 @@ package advanced;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static advanced.Type.KID;
@@ -17,15 +16,9 @@ public class DefaultBookService implements BookService {
     private final DataProvider dataProvider;
     private final Comparator<Book> bookTitleAscending = Comparator.comparing(Book::getTitle);
     private final Comparator<Book> bookTitleDescending = bookTitleAscending.reversed();
-    private final Function<String, Predicate<String>> startsWithLetter = letter -> title -> title.startsWith(letter);
 
     public DefaultBookService(DataProvider dataProvider) {
         this.dataProvider = dataProvider;
-    }
-
-    public static void main(String[] args) {
-        DefaultBookService defaultBookService = new DefaultBookService(new DataProvider());
-        defaultBookService.test();
     }
 
     @Override
@@ -62,10 +55,10 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
-    public Long getCountOfBooksWithFirstLetter(final Predicate<String> startWithLetter) {
+    public Long getCountOfBooksWithFirstLetter(String letter) {
         return dataProvider.getAllBooks().stream()
                 .map(Book::getTitle)
-                .filter(startWithLetter)
+                .filter(title -> title.startsWith(letter))
                 .count();
     }
 
@@ -79,47 +72,6 @@ public class DefaultBookService implements BookService {
                 .orElseThrow();
     }
 
-    public void test() {
-        List<Book> allBooksForAuthor = getAllBooksForAuthor(new Author("Philip", "Dickens"));
-        System.out.println("allBooksForAuthor = " + getTitleOfBooks(allBooksForAuthor));
-        printNL();
-        List<Book> allBooksSortedByTitleAscending = getAllBooksSortedByTitleAscending();
-        System.out.println("allBooksSortedByTitleAscending = " + getTitleOfBooks(allBooksSortedByTitleAscending));
-        printNL();
-        List<Book> allBookSortedByPriceDescending = getAllBookSortedByPriceDescending();
-        System.out.println("allBookSortedByPriceDescending = " + getTitleOfBooks(allBookSortedByPriceDescending));
-        printNL();
-        List<Book> allBooks = getAllBooks();
-        String booksWithDefaultPrices = getFormattedMessage(allBooks, "Books with default prices: ");
-        System.out.println(booksWithDefaultPrices);
-        printNL();
-        List<Book> discountedBookPrices = getDiscountedBookPrices();
-        String booksWithDiscountPrices = getFormattedMessage(discountedBookPrices, "Books with discount prices: ");
-        System.out.println(booksWithDiscountPrices);
-        printNL();
-        Long bookBeginWithFCount = getCountOfBooksWithFirstLetter(startsWithLetter.apply("F"));
-        System.out.println("bookBeginWithFCount = " + bookBeginWithFCount);
-        printNL();
-        String longestSubtitle = getLongestSubtitle();
-        System.out.println("longestSubtitle = " + longestSubtitle);
-    }
-
-    private List<String> getTitleOfBooks(List<Book> allBookSortedByPriceDescending) {
-        return allBookSortedByPriceDescending.stream()
-                .map(Book::getTitle)
-                .collect(Collectors.toList());
-    }
-
-    private String getFormattedMessage(List<Book> books, String title) {
-        return books.stream()
-                .map(book -> book.getTitle() + ": " + book.getPrice())
-                .collect(Collectors.joining(", ", title, ""));
-    }
-
-    private void printNL() {
-        System.out.print("\n");
-    }
-
     private BigDecimal calculateDiscount(Book book) {
         BigDecimal price = book.getPrice();
         return switch (book.getType()) {
@@ -131,20 +83,20 @@ public class DefaultBookService implements BookService {
 
     private BigDecimal getOldBookDiscountedPrice(BigDecimal price) {
         if (price.compareTo(BigDecimal.valueOf(1000)) > 0) {
-            return price.multiply(BigDecimal.valueOf(.85));
+            return price.multiply(BigDecimal.valueOf(.85)).setScale(1, RoundingMode.HALF_EVEN);
         }
-        return price.multiply(BigDecimal.valueOf(.75));
+        return price.multiply(BigDecimal.valueOf(.75)).setScale(1, RoundingMode.HALF_EVEN);
     }
 
     private BigDecimal getNewlyReleasedBookDiscountedPrice(BigDecimal price) {
         if (price.compareTo(BigDecimal.valueOf(2000)) > 0) {
-            return price.multiply(BigDecimal.valueOf(.60)).add(BigDecimal.valueOf(500));
+            return price.multiply(BigDecimal.valueOf(.60)).add(BigDecimal.valueOf(500)).setScale(1, RoundingMode.HALF_EVEN);
         }
-        return price.multiply(BigDecimal.valueOf(.75));
+        return price.multiply(BigDecimal.valueOf(.75)).setScale(1, RoundingMode.HALF_EVEN);
     }
 
     private BigDecimal getKidsBookDiscountedPrice(BigDecimal price) {
-        return price.multiply(BigDecimal.valueOf(0.5)).subtract(BigDecimal.ONE);
+        return price.multiply(BigDecimal.valueOf(0.5)).subtract(BigDecimal.ONE).setScale(1, RoundingMode.HALF_EVEN);
     }
 
 }
