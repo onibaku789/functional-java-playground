@@ -22,17 +22,23 @@ public class DefaultBookService implements BookService {
     }
 
     public static BigDecimal getOldBookDiscountedPrice(BigDecimal price) {
+        BigDecimal newPrice;
         if (price.compareTo(BigDecimal.valueOf(1000)) > 0) {
-            return price.multiply(BigDecimal.valueOf(.85)).setScale(1, RoundingMode.HALF_EVEN);
+            newPrice = price.multiply(BigDecimal.valueOf(.85));
+        } else {
+            newPrice = price.multiply(BigDecimal.valueOf(.75));
         }
-        return price.multiply(BigDecimal.valueOf(.75)).setScale(1, RoundingMode.HALF_EVEN);
+        return newPrice.setScale(1, RoundingMode.HALF_EVEN);
     }
 
     public static BigDecimal getNewlyReleasedBookDiscountedPrice(BigDecimal price) {
+        BigDecimal newPrice;
         if (price.compareTo(BigDecimal.valueOf(2000)) > 0) {
-            return price.multiply(BigDecimal.valueOf(.60)).add(BigDecimal.valueOf(500)).setScale(1, RoundingMode.HALF_EVEN);
+            newPrice = price.multiply(BigDecimal.valueOf(.60)).add(BigDecimal.valueOf(500));
+        } else {
+            newPrice = price.multiply(BigDecimal.valueOf(.75));
         }
-        return price.multiply(BigDecimal.valueOf(.75)).setScale(1, RoundingMode.HALF_EVEN);
+        return newPrice.setScale(1, RoundingMode.HALF_EVEN);
     }
 
     public static BigDecimal getKidsBookDiscountedPrice(BigDecimal price) {
