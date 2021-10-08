@@ -1,7 +1,8 @@
 package advanced;
 
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.Map;
+import java.util.Set;
 
 public interface BookService {
     List<Book> getAllBooksForAuthor(final Author author);
@@ -17,5 +18,7 @@ public interface BookService {
     List<Book> getAllBooks();
 
     String getLongestSubtitle();
+
+    Map<String, Set<Book>> getBooksByTitleFirstLetter();
 
 }
