@@ -19,7 +19,7 @@ public class HigherOrderFunctions {
                 return input % 2 != 1;
             }
         });
-        higherOrderFunctions.printFirstTenNumbersByFilter((Integer input) -> input % 2 == 1);
+        higherOrderFunctions.printFirstTenNumbersByFilter((Integer input) -> input % 2 == 0);
         higherOrderFunctions.printFirstTenNumbersByFilter(input -> true);
     }
 

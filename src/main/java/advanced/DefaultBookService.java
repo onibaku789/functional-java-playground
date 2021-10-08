@@ -12,8 +12,8 @@ import static advanced.Type.OLD;
 
 public class DefaultBookService implements BookService {
     private final DataProvider dataProvider;
-    private final Comparator<Book> bookTitleAscending = Comparator.comparing(Book::getTitle);
-    private final Comparator<Book> bookTitleDescending = bookTitleAscending.reversed();
+    private final Comparator<Book> byTitleAscending = Comparator.comparing(Book::getTitle);
+    private final Comparator<Book> byTitleDescending = byTitleAscending.reversed();
 
     public DefaultBookService(DataProvider dataProvider) {
         this.dataProvider = dataProvider;
@@ -54,7 +54,7 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
-    public List<Book> getAllBookSortedByPriceDescending() {
+    public List<Book> getAllBookSortedByTitleDescending() {
         return null;
     }
 

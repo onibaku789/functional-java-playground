@@ -28,9 +28,10 @@ public class RandomPracc {
     }
 
     public void java8() {
-        List<Integer> numbers = random.ints(1, 100)
+        List<Integer> numbers = random.ints(1, 101)
                 .limit(10)
-                .boxed().collect(Collectors.toList());
+                .boxed()
+                .collect(Collectors.toList());
         System.out.println("numbers = " + numbers);
         List<Integer> sortedNumbers = numbers.stream()
                 .sorted(Comparator.naturalOrder())

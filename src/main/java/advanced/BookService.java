@@ -8,7 +8,7 @@ public interface BookService {
 
     List<Book> getAllBooksSortedByTitleAscending();
 
-    List<Book> getAllBookSortedByPriceDescending();
+    List<Book> getAllBookSortedByTitleDescending();
 
     List<Book> getDiscountedBooks();
 
