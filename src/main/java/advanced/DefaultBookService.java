@@ -1,6 +1,8 @@
 package advanced;
 
 
+import advanced.util.BigDecimalAverageCollector;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 import static advanced.Type.KID;
 import static advanced.Type.NEW_RELEASE;
 import static advanced.Type.OLD;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toSet;
 
@@ -25,8 +28,8 @@ public class DefaultBookService implements BookService {
         this.dataProvider = dataProvider;
     }
 
-    public static BigDecimal getOldBookDiscountedPrice(BigDecimal price) {
-        BigDecimal newPrice;
+    public static BigDecimal getOldBookDiscountedPrice(final BigDecimal price) {
+        final BigDecimal newPrice;
         if (price.compareTo(BigDecimal.valueOf(1000)) > 0) {
             newPrice = price.multiply(BigDecimal.valueOf(.85));
         } else {
@@ -35,8 +38,8 @@ public class DefaultBookService implements BookService {
         return newPrice.setScale(1, RoundingMode.HALF_EVEN);
     }
 
-    public static BigDecimal getNewlyReleasedBookDiscountedPrice(BigDecimal price) {
-        BigDecimal newPrice;
+    public static BigDecimal getNewlyReleasedBookDiscountedPrice(final BigDecimal price) {
+        final BigDecimal newPrice;
         if (price.compareTo(BigDecimal.valueOf(2000)) > 0) {
             newPrice = price.multiply(BigDecimal.valueOf(.60)).add(BigDecimal.valueOf(500));
         } else {
@@ -45,7 +48,7 @@ public class DefaultBookService implements BookService {
         return newPrice.setScale(1, RoundingMode.HALF_EVEN);
     }
 
-    public static BigDecimal getKidsBookDiscountedPrice(BigDecimal price) {
+    public static BigDecimal getKidsBookDiscountedPrice(final BigDecimal price) {
         return price.multiply(BigDecimal.valueOf(0.5)).subtract(BigDecimal.ONE);
     }
 
@@ -83,7 +86,7 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
-    public Long getCountOfBooksWithFirstLetter(String letter) {
+    public Long getCountOfBooksWithFirstLetter(final String letter) {
         return dataProvider.getAllBooks().stream()
                 .map(Book::getTitle)
                 .filter(title -> title.startsWith(letter))
@@ -101,13 +104,19 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
-    public Map<String, Set<String>> getBookTitleByFirstLetter() {
+    public Map<Character, Set<String>> getBookTitleByFirstLetter() {
         return dataProvider.getAllBooks().stream()
-                .collect(Collectors.groupingBy(book -> String.valueOf(book.getTitle().charAt(0)), mapping(Book::getTitle,toSet())));
+                .collect(Collectors.groupingBy(book -> book.getTitle().charAt(0), mapping(Book::getTitle, toSet())));
+    }
+
+    @Override
+    public Map<Type, BigDecimal> getAveragePriceByBookType() {
+        return dataProvider.getAllBooks().stream()
+                .collect(groupingBy(Book::getType, mapping(Book::getPrice, new BigDecimalAverageCollector())));
     }
 
     private BigDecimal calculateDiscount(Book book) {
-        BigDecimal price = book.getPrice();
+        final BigDecimal price = book.getPrice();
         return switch (book.getType()) {
             case OLD -> OLD.calculatePrice(price);
             case NEW_RELEASE -> NEW_RELEASE.calculatePrice(price);

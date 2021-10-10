@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,6 +63,7 @@ class DefaultBookServiceTest {
 
     @AfterEach
     protected void tearUp() {
+        then(dataProvider).should().getAllBooks();
         underTest = null;
     }
 
@@ -73,7 +75,6 @@ class DefaultBookServiceTest {
         final List<Book> actual = underTest.getAllBooks();
         //THEN
         assertEquals(expected, actual);
-        then(dataProvider).should().getAllBooks();
     }
 
     @Test
@@ -86,7 +87,6 @@ class DefaultBookServiceTest {
         final List<Book> actual = underTest.getAllBooksForAuthor(author);
         //THEN
         assertEquals(expected, actual);
-        then(dataProvider).should().getAllBooks();
 
     }
 
@@ -182,16 +182,29 @@ class DefaultBookServiceTest {
     @Test
     void getBooksByTitleFirstLetter() {
         //GIVEN
-        final Map<String, Set<String>> expected = Map.of(
-                "R", Set.of("Refactoring"),
-                "C", Set.of("Clean Code", "Coding for Kids: Python"),
-                "D", Set.of("Do Androids Dream of Electric Sheep?"),
-                "E", Set.of("Effective Java"),
-                "F", Set.of("Functional programming in Java"));
+        final Map<Character, Set<String>> expected = Map.of(
+                'R', Set.of("Refactoring"),
+                'C', Set.of("Clean Code", "Coding for Kids: Python"),
+                'D', Set.of("Do Androids Dream of Electric Sheep?"),
+                'E', Set.of("Effective Java"),
+                'F', Set.of("Functional programming in Java"));
         //WHEN
-        final Map<String, Set<String>> actual = underTest.getBookTitleByFirstLetter();
+        final Map<Character, Set<String>> actual = underTest.getBookTitleByFirstLetter();
         //THEN
         assertEquals(expected, actual);
-        then(dataProvider).should().getAllBooks();
+    }
+
+
+    @Test
+    void getAveragePriceByBookType() {
+        //GIVEN
+        final Map<Type, BigDecimal> expected = Map.of(
+                OLD, BigDecimal.valueOf(1934.33).setScale(2, RoundingMode.UNNECESSARY),
+                NEW_RELEASE, BigDecimal.valueOf(3500.00).setScale(2, RoundingMode.UNNECESSARY),
+                KID, BigDecimal.valueOf(5000.00).setScale(2, RoundingMode.UNNECESSARY));
+        //WHEN
+        final Map<Type, BigDecimal> actual = underTest.getAveragePriceByBookType();
+        //THEN
+        assertEquals(expected, actual);
     }
 }

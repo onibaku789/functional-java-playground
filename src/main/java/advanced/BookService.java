@@ -1,5 +1,6 @@
 package advanced;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +20,7 @@ public interface BookService {
 
     String getLongestSubtitle();
 
-    Map<String, Set<String>> getBookTitleByFirstLetter();
+    Map<Character, Set<String>> getBookTitleByFirstLetter();
 
+    Map<Type, BigDecimal> getAveragePriceByBookType();
 }
