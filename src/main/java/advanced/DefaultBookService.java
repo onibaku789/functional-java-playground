@@ -28,30 +28,6 @@ public class DefaultBookService implements BookService {
         this.dataProvider = dataProvider;
     }
 
-    public static BigDecimal getOldBookDiscountedPrice(final BigDecimal price) {
-        final BigDecimal newPrice;
-        if (price.compareTo(BigDecimal.valueOf(1000)) > 0) {
-            newPrice = price.multiply(BigDecimal.valueOf(.85));
-        } else {
-            newPrice = price.multiply(BigDecimal.valueOf(.75));
-        }
-        return newPrice.setScale(1, RoundingMode.HALF_EVEN);
-    }
-
-    public static BigDecimal getNewlyReleasedBookDiscountedPrice(final BigDecimal price) {
-        final BigDecimal newPrice;
-        if (price.compareTo(BigDecimal.valueOf(2000)) > 0) {
-            newPrice = price.multiply(BigDecimal.valueOf(.60)).add(BigDecimal.valueOf(500));
-        } else {
-            newPrice = price.multiply(BigDecimal.valueOf(.75));
-        }
-        return newPrice.setScale(1, RoundingMode.HALF_EVEN);
-    }
-
-    public static BigDecimal getKidsBookDiscountedPrice(final BigDecimal price) {
-        return price.multiply(BigDecimal.valueOf(0.5)).subtract(BigDecimal.ONE);
-    }
-
     @Override
     public List<Book> getAllBooks() {
         return dataProvider.getAllBooks();
@@ -72,14 +48,14 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
-    public List<Book> getAllBookSortedByPriceDescending() {
+    public List<Book> getAllBookSortedByTitleDescending() {
         return dataProvider.getAllBooks().stream()
                 .sorted(bookTitleDescending)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Book> getDiscountedBookPrices() {
+    public List<Book> getDiscountedBooks() {
         return dataProvider.getAllBooks().stream()
                 .map(book -> book.bookWithPrice(calculateDiscount(book)))
                 .collect(Collectors.toList());
