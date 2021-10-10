@@ -1,12 +1,14 @@
 package advanced;
 
+import advanced.util.BookDiscountCalculator;
+
 import java.math.BigDecimal;
 import java.util.function.Function;
 
 public enum Type {
-    KID(DefaultBookService::getKidsBookDiscountedPrice),
-    NEW_RELEASE(DefaultBookService::getNewlyReleasedBookDiscountedPrice),
-    OLD(DefaultBookService::getOldBookDiscountedPrice);
+    KID(BookDiscountCalculator::getKidsBookDiscountedPrice),
+    NEW_RELEASE(BookDiscountCalculator::getNewlyReleasedBookDiscountedPrice),
+    OLD(BookDiscountCalculator::getOldBookDiscountedPrice);
     private final Function<BigDecimal, BigDecimal> priceCalculator;
 
     Type(Function<BigDecimal, BigDecimal> priceCalculator) {
