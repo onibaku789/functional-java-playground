@@ -19,6 +19,6 @@ public interface BookService {
 
     String getLongestSubtitle();
 
-    Map<String, Set<Book>> getBooksByTitleFirstLetter();
+    Map<String, Set<String>> getBookTitleByFirstLetter();
 
 }

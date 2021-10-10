@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import static advanced.Type.KID;
 import static advanced.Type.NEW_RELEASE;
 import static advanced.Type.OLD;
+import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toSet;
 
 public class DefaultBookService implements BookService {
@@ -100,11 +101,9 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
-    public Map<String, Set<Book>> getBooksByTitleFirstLetter() {
+    public Map<String, Set<String>> getBookTitleByFirstLetter() {
         return dataProvider.getAllBooks().stream()
-                .collect(Collectors.groupingBy(book -> String.valueOf(book.getTitle().charAt(0)), toSet()));
-
-
+                .collect(Collectors.groupingBy(book -> String.valueOf(book.getTitle().charAt(0)), mapping(Book::getTitle,toSet())));
     }
 
     private BigDecimal calculateDiscount(Book book) {
