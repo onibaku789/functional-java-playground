@@ -46,7 +46,7 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
-    public List<Book> getAllBooksForAuthor(Author author) {
+    public List<Book> getAllBooksForAuthor(final Author author) {
         return null;
     }
 
