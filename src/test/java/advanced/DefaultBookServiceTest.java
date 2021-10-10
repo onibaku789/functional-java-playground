@@ -11,18 +11,21 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
-
 
 import static advanced.Type.KID;
 import static advanced.Type.NEW_RELEASE;
 import static advanced.Type.OLD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.then;
 
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 class DefaultBookServiceTest {
     private static final List<Book> books =
             List.of(new Book("isbn1", "Functional programming in Java", null,
@@ -60,38 +63,37 @@ class DefaultBookServiceTest {
 
     @AfterEach
     protected void tearUp() {
+        then(dataProvider).should().getAllBooks();
         underTest = null;
     }
 
     @Test
     void getAllBooks() {
         //GIVEN
-        List<Book> expected = books;
+        final List<Book> expected = books;
         //WHEN
-        List<Book> actual = underTest.getAllBooks();
+        final List<Book> actual = underTest.getAllBooks();
         //THEN
         assertEquals(expected, actual);
-        when(dataProvider.getAllBooks()).thenReturn(books);
     }
 
     @Test
     void getAllBooksForAuthor() {
         //GIVEN
-        List<Book> expected = List.of(new Book("isbn5", "Do Androids Dream of Electric Sheep?", null,
+        final List<Book> expected = List.of(new Book("isbn5", "Do Androids Dream of Electric Sheep?", null,
                 new Author("Philip", "Dickens"), BigDecimal.valueOf(1500L), OLD));
-        Author author = new Author("Philip", "Dickens");
+        final Author author = new Author("Philip", "Dickens");
         //WHEN
-        List<Book> actual = underTest.getAllBooksForAuthor(author);
+        final List<Book> actual = underTest.getAllBooksForAuthor(author);
         //THEN
         assertEquals(expected, actual);
-        when(dataProvider.getAllBooks()).thenReturn(books);
 
     }
 
     @Test
     void getAllBooksSortedByTitleAscending() {
         //GIVEN
-        List<Book> expected = List.of(
+        final List<Book> expected = List.of(
                 new Book("isbn2", "Clean Code", "A Handbook of Agile Software Craftsmanship",
                         new Author("Robert", "Martin"), BigDecimal.valueOf(3000L), OLD),
                 new Book("isbn6", "Coding for Kids: Python", "Learn to Code with 50 Awesome Games and Activities",
@@ -106,7 +108,7 @@ class DefaultBookServiceTest {
                         new Author("Martin", "Fowler"), BigDecimal.valueOf(5000L), NEW_RELEASE)
         );
         //WHEN
-        List<Book> actual = underTest.getAllBooksSortedByTitleAscending();
+        final List<Book> actual = underTest.getAllBooksSortedByTitleAscending();
         //THEN
         assertEquals(expected, actual);
     }
@@ -114,7 +116,7 @@ class DefaultBookServiceTest {
     @Test
     void getAllBookSortedByPriceDescending() {
         //GIVEN
-        List<Book> expected = List.of(
+        final List<Book> expected = List.of(
                 new Book("isbn3", "Refactoring", "Improving the Design of Existing Code",
                         new Author("Martin", "Fowler"), BigDecimal.valueOf(5000L), NEW_RELEASE),
                 new Book("isbn1", "Functional programming in Java", null,
@@ -129,15 +131,15 @@ class DefaultBookServiceTest {
                         new Author("Robert", "Martin"), BigDecimal.valueOf(3000L), OLD)
         );
         //WHEN
-        List<Book> actual = underTest.getAllBookSortedByTitleDescending();
+        final List<Book> actual = underTest.getAllBookSortedByPriceDescending();
         //THEN
         assertEquals(expected, actual);
     }
 
     @Test
-    void getDiscountedBook() {
+    void getDiscountedBookPrices() {
         //GIVEN
-        List<Book> expected = List.of(new Book("isbn1", "Functional programming in Java", null,
+        final List<Book> expected = List.of(new Book("isbn1", "Functional programming in Java", null,
                         new Author("Venkat", "Subramaniam"), BigDecimal.valueOf(1500.0), NEW_RELEASE),
                 new Book("isbn2", "Clean Code", "A Handbook of Agile Software Craftsmanship",
                         new Author("Robert", "Martin"), BigDecimal.valueOf(2550.0), OLD),
@@ -151,7 +153,7 @@ class DefaultBookServiceTest {
                         new Author("Adrienne", "Tacke"), BigDecimal.valueOf(2499.0), KID)
         );
         //WHEN
-        List<Book> actual = underTest.getDiscountedBooks();
+        final List<Book> actual = underTest.getDiscountedBookPrices();
         //THEN
         assertEquals(expected, actual);
     }
@@ -162,7 +164,7 @@ class DefaultBookServiceTest {
         //GIVEN
 
         //WHEN
-        Long actual = underTest.getCountOfBooksWithFirstLetter(letter);
+        final Long actual = underTest.getCountOfBooksWithFirstLetter(letter);
         //THEN
         assertEquals(expected, actual);
     }
@@ -172,8 +174,37 @@ class DefaultBookServiceTest {
         //GIVEN
 
         //WHEN
-        String actual = underTest.getLongestSubtitle();
+        final String actual = underTest.getLongestSubtitle();
         //THEN
         assertEquals("Learn to Code with 50 Awesome Games and Activities", actual);
+    }
+
+    @Test
+    void getBooksByTitleFirstLetter() {
+        //GIVEN
+        final Map<Character, Set<String>> expected = Map.of(
+                'R', Set.of("Refactoring"),
+                'C', Set.of("Clean Code", "Coding for Kids: Python"),
+                'D', Set.of("Do Androids Dream of Electric Sheep?"),
+                'E', Set.of("Effective Java"),
+                'F', Set.of("Functional programming in Java"));
+        //WHEN
+        final Map<Character, Set<String>> actual = underTest.getBookTitleByFirstLetter();
+        //THEN
+        assertEquals(expected, actual);
+    }
+
+
+    @Test
+    void getAveragePriceByBookType() {
+        //GIVEN
+        final Map<Type, BigDecimal> expected = Map.of(
+                OLD, BigDecimal.valueOf(1934.33).setScale(2, RoundingMode.UNNECESSARY),
+                NEW_RELEASE, BigDecimal.valueOf(3500.00).setScale(2, RoundingMode.UNNECESSARY),
+                KID, BigDecimal.valueOf(5000.00).setScale(2, RoundingMode.UNNECESSARY));
+        //WHEN
+        final Map<Type, BigDecimal> actual = underTest.getAveragePriceByBookType();
+        //THEN
+        assertEquals(expected, actual);
     }
 }

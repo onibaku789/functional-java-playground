@@ -22,6 +22,10 @@
 ## Java streams
 A Java Stream is a component that is capable of internal iteration of its elements, meaning it can iterate its elements itself. In contrast, when you are using the Java Collections iteration features (e.g a Java Iterator or the Java for-each loop used with a Java Iterable) you have to implement the iteration of the elements yourself. 
 
+### Collect
+- How to make a result container (ArrayList::new)
+- How to add a single  element to a result container (ArrayList:add)
+- How to merge on result container into another (ArrayList:addAll)
 ## Todo
 ### Java functional interfaces
 
