@@ -14,7 +14,7 @@ public interface BookService {
 
     List<Book> getDiscountedBooks();
 
-    Long getCountOfBooksWithFirstLetter(String letter);
+    Long getCountOfBooksWithFirstLetter(final String letter);
 
     List<Book> getAllBooks();
 

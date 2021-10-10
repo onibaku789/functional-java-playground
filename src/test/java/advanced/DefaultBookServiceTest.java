@@ -131,7 +131,7 @@ class DefaultBookServiceTest {
                         new Author("Robert", "Martin"), BigDecimal.valueOf(3000L), OLD)
         );
         //WHEN
-        final List<Book> actual = underTest.getAllBookSortedByPriceDescending();
+        final List<Book> actual = underTest.getAllBookSortedByTitleDescending();
         //THEN
         assertEquals(expected, actual);
     }
@@ -153,7 +153,7 @@ class DefaultBookServiceTest {
                         new Author("Adrienne", "Tacke"), BigDecimal.valueOf(2499.0), KID)
         );
         //WHEN
-        final List<Book> actual = underTest.getDiscountedBookPrices();
+        final List<Book> actual = underTest.getDiscountedBooks();
         //THEN
         assertEquals(expected, actual);
     }
