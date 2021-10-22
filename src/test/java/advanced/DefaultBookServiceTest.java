@@ -207,4 +207,19 @@ class DefaultBookServiceTest {
         //THEN
         assertEquals(expected, actual);
     }
+
+    @Test
+    void testGetBookPricesByISBN() {
+        //GIVEN
+        final Map<String, BigDecimal> expected = Map.of("isbn1", BigDecimal.valueOf(2000),
+                "isbn2", BigDecimal.valueOf(3000L),
+                "isbn3", BigDecimal.valueOf(5000L),
+                "isbn4", BigDecimal.valueOf(1303L),
+                "isbn5", BigDecimal.valueOf(1500L),
+                "isbn6", BigDecimal.valueOf(5000L));
+        //WHEN
+        final Map<String, BigDecimal> actual = underTest.getBookPricesByISBN();
+        //THEN
+        assertEquals(expected, actual);
+    }
 }

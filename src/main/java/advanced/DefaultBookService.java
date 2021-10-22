@@ -4,7 +4,6 @@ package advanced;
 import advanced.util.BigDecimalAverageCollector;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,7 @@ import static advanced.Type.NEW_RELEASE;
 import static advanced.Type.OLD;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 public class DefaultBookService implements BookService {
@@ -89,6 +89,12 @@ public class DefaultBookService implements BookService {
     public Map<Type, BigDecimal> getAveragePriceByBookType() {
         return dataProvider.getAllBooks().stream()
                 .collect(groupingBy(Book::getType, mapping(Book::getPrice, new BigDecimalAverageCollector())));
+    }
+
+    @Override
+    public Map<String, BigDecimal> getBookPricesByISBN() {
+        return dataProvider.getAllBooks().stream()
+                .collect(toMap(Book::getIsbn, Book::getPrice));
     }
 
     private BigDecimal calculateDiscount(Book book) {
