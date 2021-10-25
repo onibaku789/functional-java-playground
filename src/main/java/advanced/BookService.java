@@ -23,4 +23,6 @@ public interface BookService {
     Map<Character, Set<String>> getBookTitleByFirstLetter();
 
     Map<Type, BigDecimal> getAveragePriceByBookType();
+
+    Map<String, BigDecimal> getBookPricesByISBN();
 }
