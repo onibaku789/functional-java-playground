@@ -46,10 +46,10 @@ public class BigDecimalAverageCollector implements Collector<BigDecimal, BigDeci
         private BigDecimal sum = BigDecimal.ZERO;
         private BigDecimal count = BigDecimal.ZERO;
 
-        public BigDecimalAccumulator() {
+         BigDecimalAccumulator() {
         }
 
-        public BigDecimalAccumulator(BigDecimal sum, BigDecimal count) {
+         BigDecimalAccumulator(BigDecimal sum, BigDecimal count) {
             this.sum = sum;
             this.count = count;
         }
