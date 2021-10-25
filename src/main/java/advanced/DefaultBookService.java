@@ -1,8 +1,6 @@
 package advanced;
 
 
-import advanced.util.BigDecimalAverageCollector;
-
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
@@ -14,6 +12,7 @@ import java.util.stream.Collectors;
 import static advanced.Type.KID;
 import static advanced.Type.NEW_RELEASE;
 import static advanced.Type.OLD;
+import static advanced.util.BigDecimalAverageCollector.averagingBigDecimal;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toMap;
@@ -88,7 +87,7 @@ public class DefaultBookService implements BookService {
     @Override
     public Map<Type, BigDecimal> getAveragePriceByBookType() {
         return dataProvider.getAllBooks().stream()
-                .collect(groupingBy(Book::getType, mapping(Book::getPrice, new BigDecimalAverageCollector())));
+                .collect(groupingBy(Book::getType, mapping(Book::getPrice, averagingBigDecimal())));
     }
 
     @Override

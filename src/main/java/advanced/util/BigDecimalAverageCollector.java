@@ -11,6 +11,11 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 public class BigDecimalAverageCollector implements Collector<BigDecimal, BigDecimalAverageCollector.BigDecimalAccumulator, BigDecimal> {
+
+    public static BigDecimalAverageCollector averagingBigDecimal() {
+        return new BigDecimalAverageCollector();
+    }
+
     @Override
     public Supplier<BigDecimalAccumulator> supplier() {
         return BigDecimalAccumulator::new;
