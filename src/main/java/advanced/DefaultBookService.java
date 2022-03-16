@@ -5,12 +5,17 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static advanced.Type.KID;
-import static advanced.Type.NEW_RELEASE;
-import static advanced.Type.OLD;
+import static advanced.util.BigDecimalAverageCollector.averagingBigDecimal;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
+@SuppressWarnings("ALL")
 public class DefaultBookService implements BookService {
     private final DataProvider dataProvider;
     private final Comparator<Book> bookTitleAscending = Comparator.comparing(Book::getTitle);
@@ -20,64 +25,78 @@ public class DefaultBookService implements BookService {
         this.dataProvider = dataProvider;
     }
 
-
-
-    private BigDecimal calculateDiscount(Book book) {
-        final BigDecimal price = book.getPrice();
-        return switch (book.getType()) {
-            case OLD -> OLD.calculatePrice(price);
-            case NEW_RELEASE -> NEW_RELEASE.calculatePrice(price);
-            case KID -> KID.calculatePrice(price);
-        };
+    @Override
+    public List<Book> getAllBooks() {
+        return dataProvider.getAllBooks();
     }
 
     @Override
-    public List<Book> getAllBooksForAuthor(Author author) {
-        return null;
+    public List<Book> getAllBooksForAuthor(final Author author) {
+        return dataProvider.getAllBooks().stream()
+                .filter(author::isAuthorOf)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Book> getAllBooksSortedByTitleAscending() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .sorted(bookTitleAscending)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Book> getAllBookSortedByTitleDescending() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .sorted(bookTitleDescending)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Book> getDiscountedBooks() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .map(book -> book.bookWithPrice(calculateDiscount(book)))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Long getCountOfBooksWithFirstLetter(String letter) {
-        return null;
-    }
-
-    @Override
-    public List<Book> getAllBooks() {
-        return null;
+    public Long getCountOfBooksWithFirstLetter(final String letter) {
+        return dataProvider.getAllBooks().stream()
+                .map(Book::getTitle)
+                .filter(title -> title.startsWith(letter))
+                .count();
     }
 
     @Override
     public String getLongestSubtitle() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .map(Book::getSubTitle)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .max(Comparator.comparingInt(String::length))
+                .orElseThrow(() -> new RuntimeException(""));
     }
 
     @Override
     public Map<Character, Set<String>> getBookTitleByFirstLetter() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .collect(Collectors.groupingBy(book -> book.getTitle().charAt(0), mapping(Book::getTitle, toSet())));
     }
 
     @Override
     public Map<Type, BigDecimal> getAveragePriceByBookType() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .collect(groupingBy(Book::getType, mapping(Book::getPrice, averagingBigDecimal())));
     }
 
     @Override
     public Map<String, BigDecimal> getBookPricesByISBN() {
-        return null;
+        return dataProvider.getAllBooks().stream()
+                .collect(toMap(Book::getIsbn, Book::getPrice));
     }
+
+    private BigDecimal calculateDiscount(Book book) {
+        final BigDecimal price = book.getPrice();
+        return book.getType().calculatePrice(price);
+    }
+
 }
