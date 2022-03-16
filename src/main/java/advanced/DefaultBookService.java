@@ -9,15 +9,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static advanced.Type.KID;
-import static advanced.Type.NEW_RELEASE;
-import static advanced.Type.OLD;
 import static advanced.util.BigDecimalAverageCollector.averagingBigDecimal;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
+@SuppressWarnings("ALL")
 public class DefaultBookService implements BookService {
     private final DataProvider dataProvider;
     private final Comparator<Book> bookTitleAscending = Comparator.comparing(Book::getTitle);
@@ -75,7 +73,7 @@ public class DefaultBookService implements BookService {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .max(Comparator.comparingInt(String::length))
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException(""));
     }
 
     @Override
@@ -98,11 +96,7 @@ public class DefaultBookService implements BookService {
 
     private BigDecimal calculateDiscount(Book book) {
         final BigDecimal price = book.getPrice();
-        return switch (book.getType()) {
-            case OLD -> OLD.calculatePrice(price);
-            case NEW_RELEASE -> NEW_RELEASE.calculatePrice(price);
-            case KID -> KID.calculatePrice(price);
-        };
+        return book.getType().calculatePrice(price);
     }
 
 }
