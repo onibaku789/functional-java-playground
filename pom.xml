@@ -6,7 +6,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>playground</artifactId>
-    <version>1.2-TicketName-TaskDesc-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <build>
         <plugins>
             <plugin>
